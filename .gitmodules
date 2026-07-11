@@ -1,0 +1,3 @@
+[submodule "Command-Line-Parser"]
+	path = Command-Line-Parser
+	url = git@github.com:Hibyehello/Command-Line-Parser.git

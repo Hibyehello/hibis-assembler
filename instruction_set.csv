@@ -1,0 +1,40 @@
+00000000 | NOP   | No operation                       | NOP                | 00000000 00000000 00000000 00000000
+00000001 | PUT   | Rd <= Ra                           | PUT Rd Ra          | 00000001 ddddaaaa 00000000 00000000
+00000010 | PUT.  | Rd@l <= Data                       | PUT. Rd Data       | 00000010 dddd0000 DDDDDDDD DDDDDDDD
+00000011 | PUT^  | Rd@h <= Data *                     | PUT^ Rd Ra Data    | 00000011 ddddaaaa DDDDDDDD DDDDDDDD
+00000100 | SCRN  | Display Rb on screen               | SCRN Rb            | 00000100 00000000 00000000 0000bbbb
+00000101 | SCRN. | Display Data on screen             | SCRN. Data         | 00000101 00000000 00000000 0DDDDDDD
+00000110 | XOR   | Rd <= Ra XOR Rb                    | XOR Rd Ra Rb       | 00000110 ddddaaaa 00000000 0000bbbb
+00000111 | XOR.  | Rd <= Ra XOR Data                  | XOR. Rd Ra Data    | 00000111 ddddaaaa DDDDDDDD DDDDDDDD
+00001000 | AND   | Rd <= Ra AND Rb                    | AND Rd Ra Rb       | 00001000 ddddaaaa 00000000 0000bbbb
+00001001 | AND.  | Rd <= Ra AND Data                  | AND. Rd Ra Data    | 00001001 ddddaaaa DDDDDDDD DDDDDDDD
+00001010 | OR    | Rd <= Ra OR Rb                     | OR Rd Ra Rb        | 00001010 ddddaaaa 00000000 0000bbbb
+00001011 | OR.   | Rd <= Ra OR Data                   | OR. Rd Ra Data     | 00001011 ddddaaaa DDDDDDDD DDDDDDDD
+00001100 | ADD   | Rd <= Ra ADD Rb                    | ADD Rd Ra Rb       | 00001100 ddddaaaa 00000000 0000bbbb
+00001101 | ADD.  | Rd <= Ra ADD Data                  | ADD. Rd Ra Data    | 00001101 ddddaaaa DDDDDDDD DDDDDDDD
+00001110 | SUB   | Rd <= Ra SUB Rb                    | SUB Rd Ra Rb       | 00001110 ddddaaaa 00000000 0000bbbb
+00001111 | SUB.  | Rd <= Ra SUB Data                  | SUB. Rd Ra Data    | 00001111 ddddaaaa DDDDDDDD DDDDDDDD
+00010000 | MUL   | Rd <= Ra MUL Rb                    | MUL Rd Ra Rb       | 00010000 ddddaaaa 00000000 0000bbbb
+00010001 | MUL.  | Rc, Rd <= Ra MUL Data              | MUL. Rc Rd Ra Data | 00010001 ddddaaaa ccccDDDD DDDDDDDD
+00010010 | MULW  | Rc, Rd <= Ra MUL Rb                | MULW Rc Rd Ra Rb   | 00010010 ddddaaaa cccc0000 0000bbbb
+00010011 | B     | Branch to Ra                       | B Ra               | 00010011 0000aaaa 00000000 00000000
+00010100 | B.    | Branch to Addr                     | BR Addr            | 00010100 AAAAAAAA AAAAAAAA AAAAAAAA
+00010101 | BL    | Branch to Ra if less               | BL Ra              | 00010101 0000aaaa 00000000 00000000
+00010110 | BL.   | Branch to Addr is less             | Bl Addr            | 00010110 AAAAAAAA AAAAAAAA AAAAAAAA
+00010111 | BG    | Branch to Ra if greater            | BG Ra              | 00010111 0000aaaa 00000000 00000000
+00011000 | BG.   | Branch to Addr if greater          | BG. Addr           | 00011000 AAAAAAAA AAAAAAAA AAAAAAAA
+00011001 | BLE   | Branch to Ra if less or equal      | BLE Ra             | 00011001 0000aaaa 00000000 00000000
+00011010 | BLE.  | Branch to Addr if less or equal    | BLE. Addr          | 00011010 AAAAAAAA AAAAAAAA AAAAAAAA
+00011011 | BGE   | Branch to Ra if greater or equal   | BGE Ra             | 00011011 0000aaaa 00000000 00000000
+00011100 | BGE.  | Branch to Addr if greater or equal | BGE. Addr          | 00011100 AAAAAAAA AAAAAAAA AAAAAAAA
+00011101 | BE    | Branch to Ra if equal              | BE Ra              | 00011101 0000aaaa 00000000 00000000
+00011110 | BE.   | Branch to Addr if equal            | BE. Addr           | 00011110 AAAAAAAA AAAAAAAA AAAAAAAA
+00011111 | CMP   | Compare Ra, Rb                     | CMP Ra Rb          | 00011111 0000aaaa 00000000 0000bbbb
+00100000 | CMP.  | Compare Ra, Data                   | CMP. Ra Data       | 00100000 0000aaaa DDDDDDDD DDDDDDDD
+00100001 | INV   | Rd ~= Ra                           | INV Rd Ra          | 00100001 ddddaaaa 00000000 00000000
+00100010 | LSR   | Shift Ra right *                   | LSR Rd Ra Data     | 00100010 ddddaaaa 00000000 000DDDDD
+00100011 | LSL   | Shift Ra left *                    | LSL Rd Ra Data     | 00100011 ddddaaaa 00000000 000DDDDD
+00100100 | ZERO  | Rd <= Zero                         | ZERO Rd            | 00100100 dddd0000 00000000 00000000
+00100101 | CLR   | Clears Display                     | CLR                | 00100101 00000000 00000000 00000000
+
+* Currently unsupported/not fully support
