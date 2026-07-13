@@ -45,6 +45,7 @@ bool Assembler::tokenizeLine(std::string_view line) {
     std::string_view current;
 
     bool token_set = false;
+    bool cond_set = false;
     int dest_count = 0;
     int source_count = 0;
 
@@ -71,6 +72,12 @@ bool Assembler::tokenizeLine(std::string_view line) {
                 m_offset++;
             } else if(current[0] == 'r' && token_set) {
                 REGISTER reg = determineRegister(current);
+
+                // Assume that the a different condition register is wanted
+                if(!cond_set && token.op_info.has_cond) {
+                    token.dest_reg = R0;
+                    dest_count++;
+                }
 
                 if(reg == REGISTER::UNSET) {
                     std::cerr << "Invalid register selected! Must in range of 0-15 on line: " << m_line << std::endl;
@@ -110,12 +117,13 @@ bool Assembler::tokenizeLine(std::string_view line) {
                         (token.dest_regs[dest_count] = reg);
 
                     dest_count++;
+                    cond_set = true;
                 } else {
                     std::cerr << "Conditional register has already been set on line: " << m_line << std::endl;
                     return false;
                 }
 
-            } else if (token_set && std::isdigit(current[0])) {
+            } else if (token_set && (std::isdigit(current[0]) || current[0] == '\'')) {
                 uint32_t immediate;
                 bool from_char = false;
                 std::from_chars_result res{};
@@ -176,7 +184,7 @@ bool Assembler::tokenizeLine(std::string_view line) {
                     token.data_in = offset;
                     token.has_data = true;
                 } else if(!token_set && it == m_labels.end()) {
-                    m_labels[std::string(current)] = m_offset+1;
+                    m_labels[std::string(current)] = m_offset;
                 } else {
                     std::cerr << "Invalid use of label or unknown label on line: " << m_line << std::endl;
                     return false;
