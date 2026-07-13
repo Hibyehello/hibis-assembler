@@ -17,20 +17,20 @@
 00010000 | MUL   | Rd <= Ra MUL Rb                    | MUL Rd Ra Rb       | 00010000 ddddaaaa 00000000 0000bbbb
 00010001 | MUL.  | Rc, Rd <= Ra MUL Data              | MUL. Rc Rd Ra Data | 00010001 ddddaaaa ccccDDDD DDDDDDDD
 00010010 | MULW  | Rc, Rd <= Ra MUL Rb                | MULW Rc Rd Ra Rb   | 00010010 ddddaaaa cccc0000 0000bbbb
-00010011 | B     | Branch to Ra                       | B Ra               | 00010011 0000aaaa 00000000 00000000
-00010100 | B.    | Branch to Addr                     | BR Addr            | 00010100 AAAAAAAA AAAAAAAA AAAAAAAA
-00010101 | BL    | Branch to Ra if less               | BL Ra              | 00010101 0000aaaa 00000000 00000000
-00010110 | BL.   | Branch to Addr is less             | Bl Addr            | 00010110 AAAAAAAA AAAAAAAA AAAAAAAA
-00010111 | BG    | Branch to Ra if greater            | BG Ra              | 00010111 0000aaaa 00000000 00000000
-00011000 | BG.   | Branch to Addr if greater          | BG. Addr           | 00011000 AAAAAAAA AAAAAAAA AAAAAAAA
-00011001 | BLE   | Branch to Ra if less or equal      | BLE Ra             | 00011001 0000aaaa 00000000 00000000
-00011010 | BLE.  | Branch to Addr if less or equal    | BLE. Addr          | 00011010 AAAAAAAA AAAAAAAA AAAAAAAA
-00011011 | BGE   | Branch to Ra if greater or equal   | BGE Ra             | 00011011 0000aaaa 00000000 00000000
-00011100 | BGE.  | Branch to Addr if greater or equal | BGE. Addr          | 00011100 AAAAAAAA AAAAAAAA AAAAAAAA
-00011101 | BE    | Branch to Ra if equal              | BE Ra              | 00011101 0000aaaa 00000000 00000000
-00011110 | BE.   | Branch to Addr if equal            | BE. Addr           | 00011110 AAAAAAAA AAAAAAAA AAAAAAAA
-00011111 | CMP   | Compare Ra, Rb                     | CMP Ra Rb          | 00011111 0000aaaa 00000000 0000bbbb
-00100000 | CMP.  | Compare Ra, Data                   | CMP. Ra Data       | 00100000 0000aaaa DDDDDDDD DDDDDDDD
+00010011 | B     | Branch to Ra                       | B CRd Ra           | 00010011 0000aaaa 00000000 00000000
+00010100 | B.    | Branch to Addr                     | BR CRd Addr        | 00010100 ddddAAAA AAAAAAAA AAAAAAAA
+00010101 | BL    | Branch to Ra if less               | BL CRd Ra          | 00010101 0000aaaa 00000000 00000000
+00010110 | BL.   | Branch to Addr is less             | Bl CRd Addr        | 00010110 ddddAAAA AAAAAAAA AAAAAAAA
+00010111 | BG    | Branch to Ra if greater            | BG CRd Ra          | 00010111 0000aaaa 00000000 00000000
+00011000 | BG.   | Branch to Addr if greater          | BG. CRd Addr       | 00011000 ddddAAAA AAAAAAAA AAAAAAAA
+00011001 | BLE   | Branch to Ra if less or equal      | BLE CRd Ra         | 00011001 0000aaaa 00000000 00000000
+00011010 | BLE.  | Branch to Addr if less or equal    | BLE. CRd Addr      | 00011010 ddddAAAA AAAAAAAA AAAAAAAA
+00011011 | BGE   | Branch to Ra if greater or equal   | BGE CRd Ra         | 00011011 0000aaaa 00000000 00000000
+00011100 | BGE.  | Branch to Addr if greater or equal | BGE. CRd Addr      | 00011100 ddddAAAA AAAAAAAA AAAAAAAA
+00011101 | BE    | Branch to Ra if equal              | BE CRd Ra          | 00011101 ddddaaaa 00000000 00000000
+00011110 | BE.   | Branch to Addr if equal            | BE. CRd Addr       | 00011110 ddddAAAA AAAAAAAA AAAAAAAA
+00011111 | CMP   | Compare Ra, Rb                     | CMP CRd Ra Rb      | 00011111 ddddaaaa 00000000 0000bbbb
+00100000 | CMP.  | Compare Ra, Data                   | CMP. CRd Ra Data   | 00100000 ddddaaaa DDDDDDDD DDDDDDDD
 00100001 | INV   | Rd ~= Ra                           | INV Rd Ra          | 00100001 ddddaaaa 00000000 00000000
 00100010 | LSR   | Shift Ra right *                   | LSR Rd Ra Data     | 00100010 ddddaaaa 00000000 000DDDDD
 00100011 | LSL   | Shift Ra left *                    | LSL Rd Ra Data     | 00100011 ddddaaaa 00000000 000DDDDD

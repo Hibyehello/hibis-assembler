@@ -12,7 +12,7 @@
 #include <sys/types.h>
 
 Assembler::Assembler(const char* source_file, const char* output_file)
-    : m_line(1)
+    : m_line(1), m_offset(0)
 {
     m_source_reader = new std::ifstream(source_file, std::ios::in);
     m_output_writer = new std::ofstream(output_file, std::ios::out);
@@ -68,6 +68,7 @@ bool Assembler::tokenizeLine(std::string_view line) {
             if(it != str_to_op.end()) {
                 token.op_info = it->second;
                 token_set = true;
+                m_offset++;
             } else if(current[0] == 'r' && token_set) {
                 REGISTER reg = determineRegister(current);
 
@@ -88,8 +89,33 @@ bool Assembler::tokenizeLine(std::string_view line) {
                         token.reg_a = reg;
 
                     source_count++;
+                } else {
+                    std::cerr << "Too many registers specified on line: " << m_line << std::endl;
+                    return false;
                 }
-            } else if (token_set) {
+            } else if(current[0] == 'c' && current[1] == 'r' && token_set) {
+                REGISTER reg = determineRegister(current, true);
+
+                if(!token.op_info.has_cond) {
+                    std::cerr << "Opcode does not support conditional registers on line: " << m_line << std::endl;
+                    return false;
+                } else if(reg > R7) {
+                    std::cerr << "Invalid conditional register selected, expected CR0-CR7 on line: " << m_line << std::endl;
+                    return false;
+                }
+
+                if(dest_count < token.op_info.dest_count) {
+                    token.op_info.dest_count == 1 ?
+                        (token.dest_reg = reg) :
+                        (token.dest_regs[dest_count] = reg);
+
+                    dest_count++;
+                } else {
+                    std::cerr << "Conditional register has already been set on line: " << m_line << std::endl;
+                    return false;
+                }
+
+            } else if (token_set && std::isdigit(current[0])) {
                 uint32_t immediate;
                 bool from_char = false;
                 std::from_chars_result res{};
@@ -116,7 +142,7 @@ bool Assembler::tokenizeLine(std::string_view line) {
                 }
 
                 if((res.ec == std::errc() && res.ptr == last) || from_char) {
-                    if(immediate <= 0xFFFFFF) {
+                    if(immediate <= 0x0FFFFF) {
                         token.data_in = immediate;
                         token.has_data = true;
                     } else {
@@ -127,6 +153,34 @@ bool Assembler::tokenizeLine(std::string_view line) {
                     std::cerr << "Error parsing data input on line: " << m_line << std::endl;
                     return false;
                 }
+            } else if(std::isalpha(current[0])) {
+                // We hopefully have a label
+                if(!token_set) {
+                    if(current[current.length()-1] != ':') {
+                        std::cerr << "Got label `" << current << "` expected `:` on line " << m_line << std::endl;
+                        return false;
+                    }
+                    current.remove_suffix(1); //= line.substr(0, current.length()-1);
+                }
+                auto it = m_labels.find(current);
+                if(token_set && it != m_labels.end() && token.op_info.take_label) {
+                    // We are referencing a label in the instruction
+                    uint32_t offset = it->second;
+
+                    if(offset >= 0x0FFFFF) {
+                        // TODO: Support getting the offset from the label and storing it in a register
+                        std::cerr << "Label is too far away to jump on line: " << m_line << std::endl;
+                        return false;
+                    }
+
+                    token.data_in = offset;
+                    token.has_data = true;
+                } else if(!token_set && it == m_labels.end()) {
+                    m_labels[std::string(current)] = m_offset+1;
+                } else {
+                    std::cerr << "Invalid use of label or unknown label on line: " << m_line << std::endl;
+                    return false;
+                }
             }
 
             if(!end) {
@@ -135,7 +189,8 @@ bool Assembler::tokenizeLine(std::string_view line) {
 
                 token_start = pos + 1;
             } else {
-                m_tokens.push_back(token);
+                if(token_set)
+                    m_tokens.push_back(token);
                 return true;
             }
         }
@@ -145,9 +200,9 @@ bool Assembler::tokenizeLine(std::string_view line) {
     return true;
 }
 
-REGISTER Assembler::determineRegister(std::string_view register_token) {
+REGISTER Assembler::determineRegister(std::string_view register_token, bool is_cond) {
     int reg_num = 0;
-    const char* first = register_token.data()+1;
+    const char* first = register_token.data() + (is_cond ? 2 : 1);
     const char* last = register_token.data()+register_token.size();
     auto reg_num_res = std::from_chars(first, last, reg_num);
 

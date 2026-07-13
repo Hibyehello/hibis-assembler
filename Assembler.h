@@ -5,6 +5,7 @@
 #include <fstream>
 #include <list>
 #include <string_view>
+#include <map>
 
 class Assembler {
 public:
@@ -37,7 +38,7 @@ public:
 
 private:
     bool tokenizeLine(std::string_view line);
-    REGISTER determineRegister(std::string_view register_token);
+    REGISTER determineRegister(std::string_view register_token, bool is_cond=false);
 
 private:
     std::ofstream* m_output_writer;
@@ -45,6 +46,8 @@ private:
 
     std::list<Token> m_tokens;
     int m_line;
+    uint32_t m_offset;
 
     std::list<uint32_t> m_code;
+    std::map<std::string, uint32_t, std::less<>> m_labels;
 };
