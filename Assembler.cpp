@@ -2,7 +2,6 @@
 #include "Instructions.h"
 #include <bit>
 #include <cctype>
-#include <cmath>
 #include <cstddef>
 #include <fstream>
 #include <ios>
@@ -171,24 +170,19 @@ bool Assembler::tokenizeLine(std::string_view line) {
                     current.remove_suffix(1); //= line.substr(0, current.length()-1);
                 }
                 auto it = m_labels.find(current);
-                if(token_set && it != m_labels.end() && token.op_info.take_label) {
-                    // We are referencing a label in the instruction
-                    uint32_t offset = it->second;
 
-                    if(offset >= 0x0FFFFF) {
-                        // TODO: Support getting the offset from the label and storing it in a register
-                        std::cerr << "Label is too far away to jump on line: " << m_line << std::endl;
-                        return false;
-                    }
-
-                    token.data_in = offset;
-                    token.has_data = true;
-                } else if(!token_set && it == m_labels.end()) {
+                if((!token_set && it == m_labels.end()) || it->second == -1) {
                     m_labels[std::string(current)] = m_offset;
-                } else {
-                    std::cerr << "Invalid use of label or unknown label on line: " << m_line << std::endl;
-                    return false;
+                } else if(token_set && it == m_labels.end()) {
+                    // Label hasn't been parsed yet
+                    m_labels[std::string(current)] = -1;
+                    it = m_labels.find(current); // Update the iterator
                 }
+
+                if(token_set) {
+                    token.lbl_txt = it->first;
+                }
+                token.uses_label = true;
             }
 
             if(!end) {
@@ -241,13 +235,43 @@ bool Assembler::assemble() {
             }
         }
 
+        if(t.uses_label) {
+            auto it = m_labels.find(t.lbl_txt);
+
+            if(it != m_labels.end() && t.uses_label) {
+                // We are referencing a label in the instruction
+                uint32_t offset = it->second;
+
+                std::cout << "Assembling with label: `" << it->first << "` with offset of " << offset << std::endl;
+
+                if(offset == -1) {
+                    std::cerr << "Label: " << it->first << " not a valid label!" << std::endl;
+                    return false;
+                }
+
+                if(offset >= 0x0FFFFF) {
+                    // TODO: Support getting the offset from the label and storing it in a register
+                    std::cerr << "Label is too far away to jump on line: " << m_line << std::endl;
+                    return false;
+                }
+
+                t.data_in = offset;
+                t.has_data = true;
+                t.uses_label = true;
+
+            }
+        }
+
         if(dest == 0 && src == 1) {
             if(t.has_data) {
                 out[1] = t.data_in >> 16;
                 out[2] = (t.data_in >> 8) & 0x00FF;
                 out[3] = t.data_in & 0x0000FF;
-            } else {
+            } else if(!t.has_data) {
                 out[1] = t.reg_a;
+            } else {
+                std::cerr << "Failed to assemble opcode" << std::endl;
+                return false;
             }
         } else if(dest == 1 && src == 1) {
             if(t.has_data) {

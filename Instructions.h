@@ -42,6 +42,8 @@ enum OPCODE {
     LSL,
     ZERO,
     CLR,
+    SCRNB,
+    SCRNBI,
 };
 
 enum REGISTER {
@@ -112,6 +114,8 @@ static std::map<std::string_view, struct OpcodeInfo> str_to_op {
     {"lsl", {OPCODE::LSL, 1, 2, 5, false, false}},
     {"zero", {OPCODE::ZERO, 1, 0, 0, false, false}},
     {"clr", {OPCODE::CLR, 0, 0, 0, false, false}},
+    {"scrn#", {OPCODE::SCRNB, 0, 1, 0, false, false}},
+    {"scrn#.", {OPCODE::SCRNBI, 0, 1, 16, false, false}},
 };
 
 struct Token {
@@ -128,4 +132,7 @@ struct Token {
         uint32_t data_in;
     };
     bool has_data;
+
+    std::string_view lbl_txt;
+    bool uses_label;
 };

@@ -1,0 +1,96 @@
+clr
+put. r0 0xFFFF
+put^ r0 0xFFFF
+scrn. 'i'
+scrn. 'n'
+scrn. 't'
+scrn. ' '
+scrn. 'm'
+scrn. 'a'
+scrn. 'x'
+scrn. ':'
+scrn. ' '
+scrn# r0
+scrn. 0xA
+
+scrn. '5'
+scrn. 'x'
+scrn. '5'
+scrn. '='
+zero r1
+zero r2 0
+multiply_loop:
+add. r1 r1 5
+add. r2 r2 1
+cmp. r2 5
+bl. multiply_loop
+scrn# r1
+scrn. 0xA
+put. r1 5
+mul r1 r1 r1
+scrn. '5'
+scrn. 'x'
+scrn. '5'
+scrn. '='
+scrn# r1
+scrn. 0xA
+scrn. '5'
+scrn. '+'
+scrn. '5'
+scrn. '='
+put. r8 5
+add. r8 r8 5
+scrn# r8
+scrn. 0xA
+put. r9 100
+put. r10 63
+scrn#. 100
+scrn. '-'
+scrn#. 63
+scrn. '='
+sub r11 r9 r10
+scrn# r11
+scrn. 0xA
+zero r3
+put. r3 256
+scrn#. 256
+scrn. '*'
+scrn#. 4
+scrn. '='
+lsl r3 r3 2
+scrn# r3
+scrn. 0xA
+put. r14 0x0000FFFF
+scrn# r14
+scrn. ' '
+scrn. 'I'
+scrn. 'n'
+scrn. 'v'
+scrn. 'e'
+scrn. 'r'
+scrn. 't'
+scrn. 'e'
+scrn. 'd'
+scrn. ':'
+scrn. ' '
+inv r13 r14
+scrn# r13
+scrn. 0xA
+scrn. 'E'
+scrn. 'x'
+scrn. 'p'
+scrn. 'e'
+scrn. 'c'
+scrn. 't'
+scrn. 'e'
+scrn. 'd'
+scrn. ':'
+scrn. ' '
+zero r14
+put^ r14 r14 0xFFFF
+scrn# r14
+b. test
+put. r0 0x1234
+test:
+hold:
+b. hold
